@@ -8,6 +8,12 @@ const nl = {
 			return new Response({});
 		return await curl(backend + "/api/v1/search?q=" + query)
 		.then(res => res.json());
+	},
+	video: async (id) => {
+		if (!id)
+			return new Response({});
+		return await curl(backend + "/api/v1/videos/" + id)
+		.then(res => res.json());
 	}
 };
 
@@ -17,13 +23,23 @@ const render = {
 		if (!json)
 			return "";
 		let html = "";
-		for (let o of json) {
-			console.log(o.title);
-			html += 
-`<a href="/watch?v=${o.videoId}">${o.title}</a>
-`;
-		return html;
+		for (let i = 0; i < json.length; i++) {
+			const o = json[i];
+			html += `<a href="/watch?v=${o.videoId}">${o.title}</a>\n`;
 		}
+		return html;
+	},
+	video: (json) => {
+		console.log(json.formatStreams);
+		if (!json)
+			return "";
+		let html = "<video controls>";
+		for (let i = 0; i < json.formatStreams.length; i++) {
+			const o = json.formatStreams[i];
+			html += `\n\t<source src="${o.url}" type="${o.second__mime}" />`;
+		}
+		html += "\n</video>";
+		return html;
 	}
 };
 
@@ -32,8 +48,21 @@ Bun.serve({
 	fetch: async (req) => {
 		// console.log(await curl(backend));
 		const url = new URL(req.url);
-		const json = await nl.search(url.searchParams.get("q"));
-		console.log(json);
+		let mread = nl.search;
+		let mwrite = render.search;
+		let mparams = undefined;
+		switch (url.pathname) {
+			case "/search":
+				mread = nl.search;
+				mwrite = render.search;
+				mparams = url.searchParams.get("q");
+				break;
+			case "/watch":
+				mread = nl.video;
+				mwrite = render.video;
+				mparams = url.searchParams.get("v");
+		}
+		const json = await mread(mparams);
 		return new Response(
 `<!doctype html>
 <html>
@@ -42,9 +71,9 @@ Bun.serve({
 		<input name=q type="text" placeholder="Seach" />
 		<button>Search</button>
 	</form>
-	<code><pre>
-${render.search(json)}
-	</pre></code>
+	<div>
+${mwrite(json)}
+	</div>
 </body>
 </html>
 `
