@@ -22,23 +22,25 @@ const render = {
 	search: (json) => {
 		if (!json)
 			return "";
-		let html = "";
+		let html = "<ul>\n";
 		for (let i = 0; i < json.length; i++) {
 			const o = json[i];
-			html += `<a href="/watch?v=${o.videoId}">${o.title}</a>\n`;
+			html += `<li><a href="/watch?v=${o.videoId}">${o.title}</a></li>\n`;
 		}
+		html += "</ul>\n";
 		return html;
 	},
 	video: (json) => {
-		console.log(json.formatStreams);
 		if (!json)
 			return "";
-		let html = "<video controls>";
+		let html = `<h1>${json.title}</h1>\n`;
+		html += "<video controls>";
 		for (let i = 0; i < json.formatStreams.length; i++) {
 			const o = json.formatStreams[i];
 			html += `\n\t<source src="${o.url}" type="${o.second__mime}" />`;
 		}
 		html += "\n</video>";
+		html += "\n<div>\n" + render.search(json.recommendedVideos) + "\n</div>\n";
 		return html;
 	}
 };
@@ -66,6 +68,10 @@ Bun.serve({
 		return new Response(
 `<!doctype html>
 <html>
+<head>
+	<title>Mimasu – ${mparams}</title>
+	<meta charset=utf-8 />
+</head>
 <body>
 	<form action="/search" method="get">
 		<input name=q type="text" placeholder="Seach" />
