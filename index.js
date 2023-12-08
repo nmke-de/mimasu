@@ -1,6 +1,17 @@
 const curl = fetch;
 const backend = "http://127.0.0.1:3000";
 
+const icon = async () => new Response(
+	await Bun.file("./mimasu.svg").text(),
+	{
+		status: 200,
+		statusText: "OK",
+		headers: {
+			"Content-Type": "image/svg"
+		}
+	}
+);
+
 // Fetch functions (nl = NewLeaf)
 const nl = {
 	search: async (query) => {
@@ -68,6 +79,11 @@ Bun.serve({
 		let mwrite = render.search;
 		let mparams = undefined;
 		switch (url.pathname) {
+			case "/":
+				mread = () => null;
+				mwrite = () => "";
+				mparams = "Startpage";
+				break;
 			case "/search":
 				mread = nl.search;
 				mwrite = render.search;
@@ -92,6 +108,12 @@ Bun.serve({
 	<meta charset=utf-8 />
 </head>
 <body>
+	<a href="/">
+		<svg width="48" height="48" viewBox="0 0 12.7 12.7" version="1.1" id="svg1">
+			<path style="fill:#000000;fill-opacity:0;stroke:#000000;stroke-width:1" d="M 0.63926685,1.1731561 C 6.3177573,1.8255192 8.0424061,4.0028653 8.0424061,4.0028653 L 3.1202532,10.958268 C 0.15853276,9.1127667 2.147511,8.4467492 3.6236697,8.5979212 6.2385036,8.8657042 11.814129,11.710128 11.814129,11.710128" id="path2" />
+			<path style="fill:#000000;fill-opacity:0;stroke:#000000;stroke-width:1" d="M 10.886871,9.0109114 8.7013206,12.477339" id="path3" />
+		</svg>
+	</a>
 	<form action="/search" method="get">
 		<input name=q type="text" placeholder="Search" />
 		<button>Search</button>
