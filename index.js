@@ -47,6 +47,7 @@ const render = {
 		}
 		html += "\n</video>";
 		html += `\n<div>by <a href="/channel/${json.authorId}">${json.author}</a></div>\n`;
+		html += `\n<div>${json.descriptionHtml}</div>\n`;
 		html += "\n<div>\n" + render.search(json.recommendedVideos) + "\n</div>\n";
 		return html;
 	},
@@ -54,6 +55,7 @@ const render = {
 		if (!json)
 			return "";
 		let html = `<h1>${json.author}</h1>\n`;
+		html += `\n<div>${json.descriptionHtml}</div>\n`;
 		html += "<div>\n" + render.search(json.latestVideos) + "\n</div>\n";
 		return html;
 	}
