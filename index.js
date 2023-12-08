@@ -14,6 +14,12 @@ const nl = {
 			return new Response({});
 		return await curl(backend + "/api/v1/videos/" + id)
 		.then(res => res.json());
+	},
+	channel: async (ucid) => {
+		if (!ucid)
+			return new Response({});
+		return await curl(backend + "/api/v1/channels/" + ucid)
+		.then(res => res.json());
 	}
 };
 
@@ -25,7 +31,7 @@ const render = {
 		let html = "<ul>\n";
 		for (let i = 0; i < json.length; i++) {
 			const o = json[i];
-			html += `<li><a href="/watch?v=${o.videoId}">${o.title}</a></li>\n`;
+			html += `<li><a href="/watch?v=${o.videoId}">${o.title}</a> by <a href="/channel/${o.authorId}">${o.author}</a></li>\n`;
 		}
 		html += "</ul>\n";
 		return html;
@@ -40,7 +46,15 @@ const render = {
 			html += `\n\t<source src="${o.url}" type="${o.second__mime}" />`;
 		}
 		html += "\n</video>";
+		html += `\n<div>by <a href="/channel/${json.authorId}">${json.author}</a></div>\n`;
 		html += "\n<div>\n" + render.search(json.recommendedVideos) + "\n</div>\n";
+		return html;
+	},
+	channel: (json) => {
+		if (!json)
+			return "";
+		let html = `<h1>${json.author}</h1>\n`;
+		html += "<div>\n" + render.search(json.latestVideos) + "\n</div>\n";
 		return html;
 	}
 };
@@ -63,6 +77,11 @@ Bun.serve({
 				mread = nl.video;
 				mwrite = render.video;
 				mparams = url.searchParams.get("v");
+				break;
+			default:
+				mread = nl.channel;
+				mwrite = render.channel;
+				mparams = url.pathname.split("/")[2];
 		}
 		const json = await mread(mparams);
 		return new Response(
@@ -74,7 +93,7 @@ Bun.serve({
 </head>
 <body>
 	<form action="/search" method="get">
-		<input name=q type="text" placeholder="Seach" />
+		<input name=q type="text" placeholder="Search" />
 		<button>Search</button>
 	</form>
 	<div>
