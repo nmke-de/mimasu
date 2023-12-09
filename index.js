@@ -90,6 +90,8 @@ Bun.serve({
 				break;
 			case "/mimasu.svg":
 				return new Response(Bun.file("./mimasu.svg"));
+			case "/mimasu.css":
+				return new Response(Bun.file("./mimasu.css"));
 			case "/search":
 				mread = nl.search;
 				mwrite = render.search;
@@ -113,16 +115,17 @@ Bun.serve({
 	<title>Mimasu – ${mparams}</title>
 	<meta charset=utf-8 />
 	<link rel="shortcut icon" type="image/svg" href="/mimasu.svg" />
+	<link rel="stylesheet" type="text/css" href="/mimasu.css" />
 </head>
 <body>
-	<a href="/">
+	<a id=icon class="fixbar" href="/">
 		<img src="/mimasu.svg" alt="MIMASU" />
 	</a>
-	<form action="/search" method="get">
+	<form id=searchbar class="fixbar" action="/search" method="get">
 		<input name=q type="text" placeholder="Search" />
 		<button>Search</button>
 	</form>
-	<div>
+	<div id=content>
 ${mwrite(json)}
 	</div>
 </body>

@@ -1,0 +1,92 @@
+:root {
+	--dark: #181a1b;
+	--bright: #c7c7c7;
+	--icon-width: 10%;
+	--input-width: 80%;
+	--fixbar-height: 48px;
+}
+
+body {
+	position: absolute;
+	margin: 0;
+	border: 0;
+	padding: 0;
+	width: 100%;
+	background-color: var(--bright);
+	color: var(--dark);
+	font: normal 1.0rem "Noto Sans", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+	body {
+		background-color: var(--dark);
+		color: var(--bright);
+	}
+}
+
+a {
+	color: #00e;
+}
+@media (prefers-color-scheme: dark) {
+	a {
+		color: #3391ff;
+	}
+}
+
+.fixbar {
+	z-index: 2;
+	position: fixed;
+	height: var(--fixbar-height);
+	margin: 0;
+	border: 0;
+	padding: 0;
+	background-color: #ff7f50;
+}
+@media (prefers-color-scheme: dark) {
+	.fixbar {
+		background-color: #0e345f;
+	}
+}
+
+
+#icon {
+	float: left;
+	width: var(--icon-width);
+}
+
+#searchbar {
+	left: var(--icon-width);;
+	width: calc(100% - var(--icon-width));
+	text-align: center;
+	font: calc(var(--fixbar-height) - 8px) "Noto Sans", sans-serif;
+}
+
+#searchbar * {
+	height: 100%;
+	margin: 0;
+	border: 0;
+	padding: 0;
+	font: inherit;
+}
+@media(prefers-color-scheme: dark) {
+	#searchbar * {
+		background-color: #2b2a33;
+		color: #6f6a6a;
+	}
+}
+
+#searchbar input {
+	float: left;
+	width: var(--input-width);
+}
+
+#searchbar button {
+	position: absolute;
+	left: var(--input-width);
+	width: calc(100% - var(--input-width));
+	overflow: hidden;
+}
+
+#content {
+	position: absolute;
+	top: var(--fixbar-height);
+}
