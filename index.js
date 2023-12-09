@@ -1,6 +1,18 @@
 const curl = fetch;
 const backend = "http://127.0.0.1:3000";
 
+const date = (json) => {
+	if (!json)
+		return "";
+	else if (json.publishedText)
+		return json.publishedText;
+	else if (json.published) {
+		const dt = new Date(json.published * 1000);
+		return `since ${dt.toISOString()}`;
+	} else
+		return "";
+};
+
 // Fetch functions (nl = NewLeaf)
 const nl = {
 	search: async (query) => {
@@ -31,7 +43,7 @@ const render = {
 		let html = "<ul>\n";
 		for (let i = 0; i < json.length; i++) {
 			const o = json[i];
-			html += `<li><a href="/watch?v=${o.videoId}">${o.title}</a> by <a href="/channel/${o.authorId}">${o.author}</a></li>\n`;
+			html += `<li><a href="/watch?v=${o.videoId}">${o.title}</a> by <a href="/channel/${o.authorId}">${o.author}</a> ${date(o)}</li>\n`;
 		}
 		html += "</ul>\n";
 		return html;
@@ -46,7 +58,8 @@ const render = {
 			html += `\n\t<source src="${o.url}" type="${o.second__mime}" />`;
 		}
 		html += "\n</video>";
-		html += `\n<div>by <a href="/channel/${json.authorId}">${json.author}</a></div>\n`;
+		html += `\n<div>by <a href="/channel/${json.authorId}">${json.author}</a>`;
+		html += ` ${date(json)}</div>\n`;
 		html += `\n<div>${json.descriptionHtml}</div>\n`;
 		html += "\n<div>\n" + render.search(json.recommendedVideos) + "\n</div>\n";
 		return html;
