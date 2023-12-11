@@ -1,3 +1,5 @@
+#!/usr/bin/env -S bun run
+
 const curl = fetch;
 const backend = "http://127.0.0.1:3000";
 
