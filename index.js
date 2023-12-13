@@ -45,7 +45,7 @@ const render = {
 		let html = "<ul>\n";
 		for (let i = 0; i < json.length; i++) {
 			const o = json[i];
-			html += `<li><a href="/watch?v=${o.videoId}">${o.title}</a> by <a href="/channel/${o.authorId}">${o.author}</a> ${date(o)}</li>\n`;
+			html += `<li>${o.second__lengthText} <a href="/watch?v=${o.videoId}">${o.title}</a> by <a href="/channel/${o.authorId}">${o.author}</a> ${date(o)}</li>\n`;
 		}
 		html += "</ul>\n";
 		return html;
