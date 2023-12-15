@@ -72,6 +72,9 @@ a {
 		background-color: #2b2a33;
 		color: #6f6a6a;
 	}
+	#searchbar *:hover {
+		background-color: var(--dark);
+	}	
 }
 
 #searchbar input {
