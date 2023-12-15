@@ -110,6 +110,7 @@ Bun.serve({
 				mparams = url.pathname.split("/")[2];
 		}
 		const json = await mread(mparams);
+		const query = url.searchParams.get("q");
 		return new Response(
 `<!doctype html>
 <html>
@@ -124,7 +125,7 @@ Bun.serve({
 		<img src="/mimasu.svg" alt="MIMASU" />
 	</a>
 	<form id=searchbar class="fixbar" action="/search" method="get">
-		<input name=q type="text" placeholder="Search" />
+		<input name=q type="text" ${query ? "value=\"" + query + "\"" : ""} placeholder="Search" />
 		<button>Search</button>
 	</form>
 	<div id=content>
