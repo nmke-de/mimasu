@@ -32,6 +32,15 @@ a {
 	}
 }
 
+h1 {
+	text-align: center;
+}
+
+video {
+	display: block;
+	margin: auto;
+}
+
 .fixbar {
 	z-index: 2;
 	position: fixed;
@@ -90,6 +99,7 @@ a {
 }
 
 #content {
+	width: 100%;
 	position: absolute;
 	top: var(--fixbar-height);
 }
