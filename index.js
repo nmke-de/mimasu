@@ -76,8 +76,22 @@ const render = {
 	}
 };
 
+let argparse_state = "default";
+let port = 11102;
+for (let i = 2; i < Bun.argv.length; i++) {
+	switch (argparse_state) {
+		case "default":
+			if (Bun.argv[i] == "-p")
+				argparse_state = "port";
+			break;
+		case "port":
+			port = Number(Bun.argv[i]);
+			argparse_state = "default";
+	}
+}
+
 Bun.serve({
-	port: 11102,
+	port: port,
 	fetch: async (req) => {
 		// console.log(await curl(backend));
 		const url = new URL(req.url);
